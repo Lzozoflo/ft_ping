@@ -1,0 +1,7 @@
+*.log
+*.env*
+*secret*
+node_modules/
+build/
+dist/
+*out*
