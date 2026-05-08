@@ -1,7 +1,5 @@
-*.log
 *.env*
-*secret*
-node_modules/
-build/
-dist/
+*log*
 *out*
+ft_ping
+.obj
