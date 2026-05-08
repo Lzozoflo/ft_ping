@@ -10,7 +10,7 @@ NAME        := ft_ping
 BINARY_NAME := ft_ping
 
 CC          := cc
-# CFLAGS      := -Wall -Wextra -Werror -I ./inc
+CFLAGS      := -Wall -Wextra -Werror -I ./inc
 # CFLAGS      := -Weverything -I ./inc
 
 # ── Source .c .h ────────────────────────────────────────────────────────
@@ -22,12 +22,16 @@ OBJS        := $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 # ── Rule ────────────────────────────────────────────────────────────────
 
+# Règle catch-all : capture les arguments pour qu'ils ne soient pas traités comme des cibles
+%:
+	@:
 
 all: $(NAME)
 
 # Linkage final
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@echo "Compilation terminée."
 
 # Compilation des objets
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -35,22 +39,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ── Test ────────────────────────────────────────────────────────────────
+# Récupère tous les arguments après "prog"
+ARGS = $(filter-out prog,$(MAKECMDGOALS))
 
-vtest: all
-	$(CC) $(CFLAGS) -g3 $(MAIN) $(NAME) -o $(BINARY_NAME)
-
-	@if [ -z "$(ARG0)" ]; then \
-		echo "❌ ARG est vide, veuillez fournir un argument."; \
-		exit 42; \
-	else \
-		echo "-----------------------------------------------------------------------------";\
-		echo "✔ exécutable créé et lancé avec : ./$(BINARY_NAME) [$(ARG0)] [$(ARG1)] [$(ARG2)] [$(ARG3)] [$(ARG4)] [$(ARG5)]"; \
-		valgrind --leak-check=full --show-leak-kinds=all --show-mismatched-frees=yes --track-fds=yes --trace-children=yes ./$(BINARY_NAME) $(ARG0) $(ARG1) $(ARG2) $(ARG3) $(ARG4) $(ARG5); \
-	fi
-
-	@rm -rf $(OBJ_DIR)
-	@rm $(BINARY_NAME)
-
+prog: all 
+	@./ft_ping $(ARGS)
 
 # ── CLEANING ────────────────────────────────────────────────────────────
 
