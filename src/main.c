@@ -53,7 +53,7 @@ int  checkParameter(int argc, const char **arg, main_cmd_bin **optionStructPtr){
 
             } else if (strncmp(toCmp, "h", 2) == 0) {
                 printf("h");
-                // option = HELP; 
+                // option = HELP;
             } else if (strncmp(toCmp, "f", 2) == 0) {
                 printf("f");
                 // option = HELP; 
