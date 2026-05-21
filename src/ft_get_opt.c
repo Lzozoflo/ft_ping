@@ -17,6 +17,9 @@ static int	ft_get_short_flag(opt_flag *opt_flags, char c, char **argv)
 			opt_flags[i].info += ACTIVE;
 
 			if (opt_flags[i].info == WITH_PARAM) {
+
+                if (!argv[1]) { return (-1); } // Sécurité si pas d'argument après -f
+
 				// printf("short_flag: -%c <argv: %s>\n", opt_flags[i].short_flag, argv[1]);
 				opt_flags[i].content = argv[1];
 				return (1);
@@ -70,6 +73,9 @@ static int	ft_get_long_flag(opt_flag *opt_flags, char *opt, char **argv)
 			opt_flags[i].info += ACTIVE;
 
 			if (opt_flags[i].info == WITH_PARAM) {
+
+                if (!argv[1]) { return (-1); } // Sécurité si pas d'argument après -f
+
 				// printf("short_flag: -%c <argv: %s>\n", opt_flags[i].short_flag, argv[1]);
 				opt_flags[i].content = argv[1];
 				return (1);
@@ -82,48 +88,82 @@ static int	ft_get_long_flag(opt_flag *opt_flags, char *opt, char **argv)
 	return (0);
 }
 
-int		ft_get_flags(int argc, char **argv, opt_flag *opt_flags, char **data)
+int		ft_get_flags(int argc, char **argv, opt_data *data)
 {
-	int		i;
+	int     data_idx = 0;
+    int     ret = 0;
+	int		i = 0;
+ 
+	if (!data || !data->opt_flags || !argv || !data->data)
+        return 1;
 
-	i = 0;
-	if (!opt_flags || !argv)
-		return 1;
 	while (++i < argc) {
 
 		if (!ft_strncmp(argv[i], "--", 2)){
 
-			i += ft_get_long_flag(opt_flags, &argv[i][2], &argv[i]);
+			ret = ft_get_long_flag(data->opt_flags, &argv[i][2], &argv[i]);
+			if (ret == -1) { return -1; }
+			i += ret;
 		
 		} else if (argv[i][0] == '-') {
 
 			if (strlen(argv[i]) != 2) { return -1; }
 
-			i += ft_get_short_flag(opt_flags, argv[i][1], &argv[i]);
-		} 
-		// else if (){ // le reste
+			ret = ft_get_short_flag(data->opt_flags, argv[i][1], &argv[i]);
+			if (ret == -1) { return -1; }
+			i += ret;
 
-		// 	data = argv[i];
-		// }
+		} else { // le reste
+
+			if (data_idx >= data->max_data_idx) { return (-1); }
+
+			data->data[data_idx] = argv[i];
+		}
 	}
 	return 0;
 }
 
-int main(int argc, char **argv){
+void ft_get_flags_result(opt_flag *opt_flags, char **single_param)
+{
+
+	// --- Zone de Test ---
+    printf("--- RÉSULTAT DU PARSING ---\n");
+    for (int i = 0; opt_flags[i].info != END_PARAM; i++) {
+		if (opt_flags[i].info & ACTIVE) { // Si le flag est actif
+            printf("Option [-%c / --%s] active", opt_flags[i].short_flag, opt_flags[i].long_flag);
+            if (opt_flags[i].content)
+			printf(" avec valeur: %s", opt_flags[i].content);
+            printf("\n");
+        }
+    }
+	
+    printf("\nArguments restants (single_param) :\n");
+    for (int i = 0; single_param[i] != NULL; i++) {
+		printf("  single_param[%d] = %s\n", i, single_param[i]);
+    }
+	
+}
+
+
+int main(int argc, char **argv) {
 
 	opt_flag opt_flags[] = {
-	 // { info, 	  short, long,		   content },
-        { NO_PARAM, 	'v', "verbose",    NULL },
-        { NO_PARAM, 	'h', "help",       NULL },
-        { WITH_PARAM, 	'f', "file",       NULL },
-        { END_PARAM, 	0, NULL,        NULL },
+	 // { info, 	  short, long,		   	content },
+        { NO_PARAM, 	'v', "verbose",    	NULL },
+        { NO_PARAM, 	'h', "help",       	NULL },
+        { WITH_PARAM, 	'f', "file",       	NULL },
+        { END_PARAM, 	0, NULL,       		NULL },
     };
-	char *data[4];
+	char *single_param[4] = {NULL};
 
+	opt_data data = { opt_flags, single_param, 4 };
 
-	if (ft_get_flags(argc, argv, opt_flags, data)){
+	if (ft_get_flags(argc, argv, &data)) {
+        fprintf(stderr, "Erreur lors du parsing des arguments.\n");
 		return 1;
 	}
+
+	ft_get_flags_result(opt_flags, single_param);
 
 	return 0;
 }

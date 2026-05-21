@@ -11,7 +11,15 @@
 #define ACTIVE          1<<2
 #define END_PARAM       1<<3
 
-typedef struct opt_flag opt_flag;
+typedef struct opt_data     opt_data;
+typedef struct opt_flag     opt_flag;
+
+struct opt_data
+{
+    opt_flag    *opt_flags;
+    char        **data;
+    int         max_data_idx;
+};
 
 
 /*
