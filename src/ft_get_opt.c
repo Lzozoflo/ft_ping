@@ -1,24 +1,27 @@
-
-
-#include <stdio.h>          // dprintf
-#include <string.h>         // 
+#include <stdio.h>
 #include "ft_get_opt.h"
 
+static size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 static int	ft_get_short_flag(opt_flag *opt_flags, char c, char **argv)
 {
-	size_t		i;
-
-	i = -1;
-	while (opt_flags[++i].info != END_PARAM) {
+	for (int i = 0; !(opt_flags[i].info & END_PARAM); i++) {
 
 		if (opt_flags[i].short_flag == c) {
 
-			opt_flags[i].info += ACTIVE;
+			opt_flags[i].info |= ACTIVE;
 
-			if (opt_flags[i].info == WITH_PARAM) {
+			if (opt_flags[i].info & WITH_PARAM) {
 
-                if (!argv[1]) { return (-1); } // Sécurité si pas d'argument après -f
+                if (!argv[1]) { return (-1); } // secu si pas d'argument apres -f
 
 				// printf("short_flag: -%c <argv: %s>\n", opt_flags[i].short_flag, argv[1]);
 				opt_flags[i].content = argv[1];
@@ -27,7 +30,7 @@ static int	ft_get_short_flag(opt_flag *opt_flags, char c, char **argv)
 			// printf("short_flag: -%c\n", opt_flags[i].short_flag);
 			return (0);
 		}
-		printf("-%c cmp to -%c\n", c, opt_flags[i].short_flag);
+		// printf("-%c cmp to -%c\n", c, opt_flags[i].short_flag);
 	}
 	return (0);
 }
@@ -62,17 +65,13 @@ static int	ft_strncmp(const char *str1, const char *str2, size_t len)
 
 static int	ft_get_long_flag(opt_flag *opt_flags, char *opt, char **argv)
 {
-	size_t	i;
+	for (int i = 0; !(opt_flags[i].info & END_PARAM); i++) {
 
-	i = -1;
-
-	while (opt_flags[++i].info != END_PARAM) {
-
-		if (!ft_strcmp(opt, opt_flags[i].long_flag)) {
+		if (opt_flags[i].long_flag && !ft_strcmp(opt, opt_flags[i].long_flag)) {
 			
-			opt_flags[i].info += ACTIVE;
+			opt_flags[i].info |= ACTIVE;
 
-			if (opt_flags[i].info == WITH_PARAM) {
+			if (opt_flags[i].info & WITH_PARAM) {
 
                 if (!argv[1]) { return (-1); } // Sécurité si pas d'argument après -f
 
@@ -107,19 +106,21 @@ int		ft_get_flags(int argc, char **argv, opt_data *data)
 		
 		} else if (argv[i][0] == '-') {
 
-			if (strlen(argv[i]) != 2) { return -1; }
+			if (ft_strlen(argv[i]) != 2) { return -1; }
 
 			ret = ft_get_short_flag(data->opt_flags, argv[i][1], &argv[i]);
 			if (ret == -1) { return -1; }
 			i += ret;
 
-		} else { // le reste
+		} else {
+			// le reste (arguments libres)
 
-			if (data_idx >= data->max_data_idx) { return (-1); }
+			if (data_idx >= (data->max_data_idx - 1)) { return (-1); }
 
-			data->data[data_idx] = argv[i];
+			data->data[data_idx++] = argv[i];
 		}
 	}
+    data->data[data_idx] = NULL;
 	return 0;
 }
 
@@ -132,7 +133,7 @@ void ft_get_flags_result(opt_flag *opt_flags, char **single_param)
 		if (opt_flags[i].info & ACTIVE) { // Si le flag est actif
             printf("Option [-%c / --%s] active", opt_flags[i].short_flag, opt_flags[i].long_flag);
             if (opt_flags[i].content)
-			printf(" avec valeur: %s", opt_flags[i].content);
+				printf(" avec valeur: %s", opt_flags[i].content);
             printf("\n");
         }
     }
@@ -143,8 +144,7 @@ void ft_get_flags_result(opt_flag *opt_flags, char **single_param)
     }
 	
 }
-
-
+ 
 int main(int argc, char **argv) {
 
 	opt_flag opt_flags[] = {

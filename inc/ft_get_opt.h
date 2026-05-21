@@ -2,14 +2,11 @@
 #ifndef FT_GET_OPT_H
 #define FT_GET_OPT_H
 
-#define LONG_FLAG       1<<1
-#define SHORT_FLAG      1<<2
-
 // info
-#define NO_PARAM        0
-#define WITH_PARAM      1<<1
-#define ACTIVE          1<<2
-#define END_PARAM       1<<3
+#define NO_PARAM        (1 << 0)  // 000001 (1)
+#define WITH_PARAM      (1 << 1)  // 000010 (2)
+#define ACTIVE          (1 << 2)  // 000100 (4)
+#define END_PARAM       (1 << 3)  // 001000 (8)
 
 typedef struct opt_data     opt_data;
 typedef struct opt_flag     opt_flag;
@@ -37,6 +34,8 @@ struct opt_flag
     char *content;
 };
  
+int		ft_get_flags(int argc, char **argv, opt_data *data);
+void ft_get_flags_result(opt_flag *opt_flags, char **single_param);
 
 #endif
 
