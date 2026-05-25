@@ -143,25 +143,25 @@ void ft_get_flags_result(opt_flag *opt_flags, char **single_param)
     }
 }
  
-int main(int argc, char **argv) {
+// int main(int argc, char **argv) {
 
-	opt_flag opt_flags[] = {
-	 // { info, 	  short, long,		   	content },
-        { NO_PARAM, 	'v', "verbose",    	NULL },
-        { NO_PARAM, 	'h', "help",       	NULL },
-        { WITH_PARAM, 	'f', "file",       	NULL },
-        { END_PARAM, 	0, NULL,       		NULL },
-    };
-	char *single_param[4] = {NULL};
+// 	opt_flag opt_flags[] = {
+// 	 // { info, 	  short, long,		   	content },
+//         { NO_PARAM, 	'v', "verbose",    	NULL },
+//         { NO_PARAM, 	'h', "help",       	NULL },
+//         { WITH_PARAM, 	'f', "file",       	NULL },
+//         { END_PARAM, 	0, NULL,       		NULL },
+//     };
+// 	char *single_param[4] = {NULL};
 
-	opt_data data = { opt_flags, single_param, 4 };
+// 	opt_data data = { opt_flags, single_param, 4 };
 
-	if (ft_get_flags(argc, argv, &data)) {
-        fprintf(stderr, "Erreur lors du parsing des arguments.\n");
-		return 1;
-	}
+// 	if (ft_get_flags(argc, argv, &data)) {
+//         fprintf(stderr, "Erreur lors du parsing des arguments.\n");
+// 		return 1;
+// 	}
 
-	ft_get_flags_result(opt_flags, single_param);
+// 	ft_get_flags_result(opt_flags, single_param);
 
-	return 0;
-}
+// 	return 0;
+// }

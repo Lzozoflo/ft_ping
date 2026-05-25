@@ -1,16 +1,17 @@
 
-#include <stdio.h>          // dprintf
+#include <stdio.h>          // printf
 #include <string.h>         // 
 #include "ft_ping.h"
 #include "ft_get_opt.h"
 
+void print_help(void);
 
-int main(int argc, const char **argv)
+int main(int argc, char **argv)
 {
     opt_flag opt_flags[] = {
     // { info, 	  short, long,		   	content },
         { NO_PARAM, 	'v', "verbose",    	NULL },
-        { NO_PARAM, 	'h', "help",       	NULL },
+        { NO_PARAM, 	'?', "help",       	NULL },
         { WITH_PARAM, 	'f', "file",       	NULL },
         { END_PARAM, 	0, NULL,       		NULL },
     };
@@ -22,7 +23,7 @@ int main(int argc, const char **argv)
         fprintf(stderr, "Erreur lors du parsing des arguments.\n");
         return 1;
     }
-
+    print_help();
 
     return 0;
 }

@@ -38,7 +38,14 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+
 # ── Test ────────────────────────────────────────────────────────────────
+
+docker:
+	docker build -t ft_ping_env .
+	docker run -it --cap-add=NET_RAW --cap-add=NET_ADMIN ft_ping_env
+
+
 # Récupère tous les arguments après "prog"
 ARGS = $(filter-out prog,$(MAKECMDGOALS))
 

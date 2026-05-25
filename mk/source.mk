@@ -18,6 +18,7 @@ OBJ_DIR     := .obj
 
 SRC		+= ft_ping.c
 SRC		+= ft_get_opt.c
+SRC		+= ft_param.c
 # SRC		+=
 
 
