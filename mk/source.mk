@@ -16,8 +16,8 @@ OBJ_DIR     := .obj
 # ── Source ──────────────────────────────────────────────
 
 
-SRC		+= main.c
-SRC		+= file.c
+SRC		+= ft_ping.c
+SRC		+= ft_get_opt.c
 # SRC		+=
 
 

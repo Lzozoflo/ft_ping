@@ -1,6 +1,6 @@
 
-#ifndef MAIN_CMD_BIN_H
-#define MAIN_CMD_BIN_H
+#ifndef FT_PING_H
+#define FT_PING_H
 
 #define ERROR_USAGE "ft_ping: usage error: Adresse de destination requise"
 // #define ERROR_USAGE "ft_ping:"

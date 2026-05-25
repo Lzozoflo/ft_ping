@@ -126,23 +126,21 @@ int		ft_get_flags(int argc, char **argv, opt_data *data)
 
 void ft_get_flags_result(opt_flag *opt_flags, char **single_param)
 {
-
-	// --- Zone de Test ---
-    printf("--- RÉSULTAT DU PARSING ---\n");
+    printf("--- RESULT PARSING ---\n");
+    printf("\nOption (opt_flags) :\n");
     for (int i = 0; opt_flags[i].info != END_PARAM; i++) {
 		if (opt_flags[i].info & ACTIVE) { // Si le flag est actif
-            printf("Option [-%c / --%s] active", opt_flags[i].short_flag, opt_flags[i].long_flag);
-            if (opt_flags[i].content)
+            printf("  Option [-%c / --%s] active", opt_flags[i].short_flag, opt_flags[i].long_flag);
+            if (opt_flags[i].content){
 				printf(" avec valeur: %s", opt_flags[i].content);
+			}
             printf("\n");
         }
     }
-	
     printf("\nArguments restants (single_param) :\n");
     for (int i = 0; single_param[i] != NULL; i++) {
 		printf("  single_param[%d] = %s\n", i, single_param[i]);
     }
-	
 }
  
 int main(int argc, char **argv) {
